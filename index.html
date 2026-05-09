@@ -1,0 +1,90 @@
+
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>QuantVision VN | Visual Intelligence Terminal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              slate: { 950: '#020617' },
+              emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+              rose: { 500: '#f43f5e', 600: '#e11d48' },
+              blue: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'spin-slow': 'spin 12s linear infinite',
+            },
+            typography: {
+              DEFAULT: {
+                css: {
+                  maxWidth: '100%',
+                  color: 'inherit',
+                },
+              },
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700;800&display=swap');
+      
+      body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+      pre, code, .font-terminal { font-family: 'JetBrains Mono', monospace; }
+
+      ::-webkit-scrollbar { width: 4px; height: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.2); border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.4); }
+
+      .trading-grid {
+        background-size: 60px 60px;
+        background-image: 
+          linear-gradient(to right, rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+      }
+      .dark .trading-grid {
+        background-image: 
+          linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+      }
+
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+
+      @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      .animate-spin-slow {
+        animation: spin-slow 20s linear infinite;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "react": "https://esm.sh/react@^19.2.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.32.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.559.0",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
+    "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
+    "remark-gfm": "https://esm.sh/remark-gfm@^4.0.1"
+  }
+}
+</script>
+</head>
+  <body class="bg-[#f8fafc] dark:bg-[#020408] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

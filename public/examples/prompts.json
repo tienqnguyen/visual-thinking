@@ -1,0 +1,28 @@
+
+[
+  {
+    "title": "Tìm Kiếm Mẫu Hình Kỹ Thuật",
+    "prompt": "Hãy phân tích biểu đồ này. Xác định xu hướng chính (bullish/bearish) và tìm các mẫu hình giá quan trọng như Head and Shoulders, Double Top hoặc Flag. Sử dụng Python để tính toán khoảng cách % giữa hai đỉnh gần nhất.",
+    "image": "https://images.unsplash.com/photo-1611974717482-58f0073e167c?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    "title": "Trích Xuất Dữ Liệu Tài Chính",
+    "prompt": "Hãy trích xuất doanh thu hàng quý và chỉ số EPS từ bảng này. Sử dụng Python để tính toán tốc độ tăng trưởng doanh thu so với cùng kỳ (YoY) và vẽ biểu đồ cột so sánh các phân khúc kinh doanh.",
+    "image": "https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    "title": "Phân Tích RSI & Động Lượng",
+    "prompt": "Hãy xác định chỉ báo RSI trong biểu đồ này. Có dấu hiệu phân kỳ (divergence) nào giữa giá và chỉ báo không? Hãy đánh dấu các điểm phân kỳ và đưa ra nhận định về động lượng hiện tại.",
+    "image": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    "title": "Vùng Hỗ Trợ & Kháng Cự",
+    "prompt": "Xác định các vùng hỗ trợ và kháng cự quan trọng trên biểu đồ tháng này. Tập trung vào giai đoạn tích lũy gần nhất và dự đoán hướng bứt phá (breakout) dựa trên mẫu hình khối lượng giao dịch.",
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    "title": "Phân Bổ Danh Mục",
+    "prompt": "Dựa trên danh sách tài sản trong ảnh chụp màn hình này, hãy tạo một biểu đồ hình tròn thể hiện tỷ lệ phân bổ. Đề xuất chiến lược tái cơ cấu nếu tỷ trọng nhóm ngành công nghệ vượt quá 40%.",
+    "image": "https://images.unsplash.com/photo-1535320903710-d993d3d77d29?auto=format&fit=crop&q=80&w=1000"
+  }
+]
