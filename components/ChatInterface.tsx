@@ -9,7 +9,7 @@ import { sendMessageStream } from "../services/gemini";
 import { ChatMessageItem } from "./ChatMessageItem";
 import { ChatInput } from "./ChatInput";
 import { SettingsModal } from "./SettingsModal";
-import { Terminal, Settings } from "lucide-react";
+import { Terminal, Settings, Share2, Copy, Check } from "lucide-react";
 import { Part, Content } from "@google/genai";
 import { ChatMessage } from "../types";
 
@@ -20,16 +20,80 @@ export const ChatInterface: React.FC = () => {
   const [language, setLanguage] = useState<"vi" | "en">("vi");
   const [model, setModel] = useState<"gemini-3-pro-preview" | "gemini-3.5-flash">("gemini-3.5-flash");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareLink, setShareLink] = useState<string | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareId = urlParams.get('shareId');
+    if (shareId) {
+      setIsLoading(true);
+      fetch(`/api/share/${shareId}`)
+        .then(res => res.json())
+        .then(data => {
+           if (data.messages) {
+              setMessages(data.messages);
+           } else {
+              setErrorStatus(language === 'vi' ? "Đoạn chat được chia sẻ không tồn tại hoặc đã hết hạn." : "Shared chat not found or has expired.");
+           }
+        })
+        .catch(err => {
+           console.error(err);
+           setErrorStatus(language === 'vi' ? "Lỗi tải đoạn chat." : "Error loading shared chat.");
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, [language]);
+
+  const handleShare = async () => {
+    if (messages.length === 0) return;
+    setIsSharing(true);
+    setShareLink(null);
+    setCopiedLink(false);
+    try {
+      const res = await fetch("/api/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages })
+      });
+      const data = await res.json();
+      if (data.shareId) {
+        const url = `${window.location.origin}?shareId=${data.shareId}`;
+        setShareLink(url);
+      } else {
+        alert(language === 'vi' ? "Không thể chia sẻ." : "Failed to share.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(language === 'vi' ? "Không thể chia sẻ." : "Failed to share.");
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    if (shareLink) {
+      navigator.clipboard.writeText(shareLink);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    }
+  };
 
   const handleSendMessage = async (text: string, image?: string) => {
     if (!image) {
@@ -128,6 +192,16 @@ Keep the output professional, clinical, and data-driven.`;
           <option value="gemini-3-pro-preview">Pro (Preview)</option>
           <option value="gemini-3.5-flash">Flash (Fast)</option>
         </select>
+        {messages.length > 0 && (
+          <button
+            onClick={handleShare}
+            disabled={isSharing || isLoading}
+            className="p-1.5 rounded-lg bg-[#222425] border border-[#383a3b] shadow-sm text-[#9fa1a1] hover:text-white hover:bg-[#383a3b] transition-all disabled:opacity-50"
+            title={language === 'vi' ? 'Chia sẻ (Lưu lên máy chủ)' : 'Share (Save to Server)'}
+          >
+            <Share2 size={18} />
+          </button>
+        )}
         <button
           onClick={() => setIsSettingsOpen(true)}
           className="p-1.5 rounded-lg bg-[#222425] border border-[#383a3b] shadow-sm text-[#9fa1a1] hover:text-white hover:bg-[#383a3b] transition-all"
@@ -157,8 +231,21 @@ Keep the output professional, clinical, and data-driven.`;
         language={language} 
       />
 
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
-        <div className="max-w-3xl mx-auto space-y-8 pb-10">
+      {shareLink && (
+        <div className="absolute top-16 right-4 z-50 bg-[#222425] border border-[#383a3b] p-3 rounded-xl shadow-xl flex flex-col gap-2 animate-in fade-in slide-in-from-top-4">
+           <div className="text-xs text-[#9fa1a1] font-medium">{language === 'vi' ? 'Liên kết chia sẻ (Tạm thời):' : 'Share link (Temporary):'}</div>
+           <div className="flex items-center gap-2">
+             <input readOnly value={shareLink} className="bg-[#111111] text-white text-xs px-2 py-1.5 rounded-md border border-[#383a3b] w-48 outline-none" />
+             <button onClick={copyToClipboard} className="p-1.5 rounded-md bg-[#2383E2] hover:bg-blue-600 text-white transition-colors">
+                {copiedLink ? <Check size={14} /> : <Copy size={14} />}
+             </button>
+           </div>
+           <button onClick={() => setShareLink(null)} className="text-[10px] text-right text-gray-400 hover:text-white uppercase font-bold mt-1">Đóng</button>
+        </div>
+      )}
+
+      <main ref={scrollContainerRef} className="flex-1 overflow-y-auto p-2 md:p-6 lg:p-8 custom-scrollbar">
+        <div className="max-w-5xl mx-auto space-y-8 pb-10">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center text-center mt-32 space-y-6">
                 <div className="w-16 h-16 bg-[#222425] rounded-2xl flex items-center justify-center border border-[#383a3b] shadow-sm">
@@ -174,12 +261,11 @@ Keep the output professional, clinical, and data-driven.`;
               <ChatMessageItem key={msg.id} message={msg} isStreaming={isLoading && index === messages.length - 1} />
             ))
           )}
-          <div ref={messagesEndRef} />
         </div>
       </main>
 
-      <div className="flex-shrink-0 p-4 pb-6">
-        <div className="max-w-3xl mx-auto relative">
+      <div className="flex-shrink-0 p-2 md:p-4 pb-6 w-full max-w-5xl mx-auto">
+        <div className="relative">
           <ChatInput onSend={handleSendMessage} disabled={isLoading} language={language} />
           {errorStatus && (
             <div className="absolute -top-12 left-0 right-0 text-red-400 font-medium bg-red-500/10 p-2 rounded border border-red-500/20 text-center text-sm shadow-sm backdrop-blur-md">

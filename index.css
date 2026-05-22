@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 body { 
-    font-family: 'Inter', sans-serif; 
-    background-color: #191a1a; 
-    color: #e8e8e6; 
+    font-family: 'Inter', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif; 
+    background-color: #0a0a0a; 
+    color: #f3f4f6; 
     letter-spacing: -0.01em;
+    font-size: 17px;
+    line-height: 1.6;
 }
 
 /* Scrollbar */
@@ -16,21 +18,55 @@ body {
 .prose {
     max-width: 100%;
 }
+
+.prose strong {
+    color: #60a5fa; /* Blue 400 for better visibility in dark mode */
+    font-weight: 700;
+}
+
+.prose em {
+    color: #fbbf24; /* Amber 400 for italics */
+    font-style: italic;
+}
+
+.prose h1, .prose h2, .prose h3 {
+    font-family: 'Inter', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.prose h1 {
+    color: #ffffff;
+    font-size: 1.5em;
+}
+
+.prose h2 {
+    color: #34d399; /* Emerald 400 */
+    font-size: 1.3em;
+}
+
+.prose h3 {
+    color: #a78bfa; /* Purple 400 */
+    font-size: 1.15em;
+}
+
 .prose code {
-    background: #222425;
-    color: #e8e8e6;
+    background: #1f2937;
+    color: #e5e7eb;
     padding: 0.2rem 0.4rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.85em;
     font-weight: 500;
-    border: 1px solid #383a3b;
+    border: 1px solid #374151;
     border-radius: 4px;
 }
 .prose pre {
-    background: #111111 !important;
-    color: #e8e8e6;
+    background: #111827 !important;
+    color: #e5e7eb;
     padding: 1rem;
-    border: 1px solid #383a3b;
+    border: 1px solid #374151;
     border-radius: 8px;
     position: relative;
     overflow-x: auto;
@@ -52,26 +88,18 @@ body {
 .prose pre code .number { color: #d19a66; }
 .prose pre code .operator { color: #56b6c2; }
 
-.prose h1, .prose h2, .prose h3 {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: #ffffff;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-}
 .prose a {
-    color: #2383E2;
+    color: #3b82f6;
     text-decoration: none;
 }
 .prose a:hover {
     text-decoration: underline;
 }
 .prose blockquote {
-    border-left: 3px solid #383a3b;
+    border-left: 3px solid #374151;
     background: transparent;
     padding: 0.1rem 1rem;
-    color: #9fa1a1;
+    color: #9ca3af;
     font-style: normal;
     font-family: 'Inter', sans-serif;
 }
