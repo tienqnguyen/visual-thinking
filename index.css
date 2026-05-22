@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: #191a1a; 
+    color: #e8e8e6; 
+    letter-spacing: -0.01em;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #383a3b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555758; }
+
+.prose {
+    max-width: 100%;
+}
+.prose code {
+    background: #222425;
+    color: #e8e8e6;
+    padding: 0.2rem 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    font-weight: 500;
+    border: 1px solid #383a3b;
+    border-radius: 4px;
+}
+.prose pre {
+    background: #111111 !important;
+    color: #e8e8e6;
+    padding: 1rem;
+    border: 1px solid #383a3b;
+    border-radius: 8px;
+    position: relative;
+    overflow-x: auto;
+}
+.prose pre code {
+    background: transparent;
+    padding: 0;
+    border: none;
+    color: inherit;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
+}
+
+/* Code Syntax Highlights for a clean dark background */
+.prose pre code .keyword { color: #c678dd; }
+.prose pre code .string { color: #98c379; }
+.prose pre code .comment { color: #5c6370; font-style: italic; }
+.prose pre code .function { color: #61afef; }
+.prose pre code .number { color: #d19a66; }
+.prose pre code .operator { color: #56b6c2; }
+
+.prose h1, .prose h2, .prose h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+.prose a {
+    color: #2383E2;
+    text-decoration: none;
+}
+.prose a:hover {
+    text-decoration: underline;
+}
+.prose blockquote {
+    border-left: 3px solid #383a3b;
+    background: transparent;
+    padding: 0.1rem 1rem;
+    color: #9fa1a1;
+    font-style: normal;
+    font-family: 'Inter', sans-serif;
+}

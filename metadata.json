@@ -1,5 +1,6 @@
 {
   "name": "Gemini Visual Thinking",
   "description": "Explore the thinking-with-images feature of Gemini 3.0 Flash Preview",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": []
 }

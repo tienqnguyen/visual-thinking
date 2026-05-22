@@ -12,20 +12,49 @@
         theme: {
           extend: {
             colors: {
-              slate: { 950: '#020617' },
-              emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
-              rose: { 500: '#f43f5e', 600: '#e11d48' },
-              blue: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+              perplex: {
+                bg: '#191a1a',
+                card: '#222425',
+                border: '#383a3b',
+                text: '#e8e8e6',
+                dim: '#9fa1a1',
+                accent: '#2383E2',
+                highlight: '#202222'
+              }
             },
-            animation: {
-              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'spin-slow': 'spin 12s linear infinite',
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
             },
             typography: {
               DEFAULT: {
                 css: {
                   maxWidth: '100%',
-                  color: 'inherit',
+                  color: '#e8e8e6',
+                  hr: {
+                    borderColor: '#383a3b',
+                  },
+                  'h1, h2, h3, h4, th': {
+                    color: '#ffffff',
+                    fontWeight: '600',
+                    letterSpacing: '-0.02em',
+                  },
+                  strong: {
+                    color: '#ffffff',
+                    fontWeight: '600',
+                  },
+                  blockquote: {
+                    borderLeftColor: '#383a3b',
+                    color: '#9fa1a1',
+                    fontStyle: 'normal',
+                  },
+                  a: {
+                    color: '#2383E2',
+                    textDecoration: 'none',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                    },
+                  },
                 },
               },
             },
@@ -33,41 +62,6 @@
         },
       }
     </script>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700;800&display=swap');
-      
-      body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-      pre, code, .font-terminal { font-family: 'JetBrains Mono', monospace; }
-
-      ::-webkit-scrollbar { width: 4px; height: 4px; }
-      ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.2); border-radius: 10px; }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.4); }
-
-      .trading-grid {
-        background-size: 60px 60px;
-        background-image: 
-          linear-gradient(to right, rgba(16, 185, 129, 0.03) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
-      }
-      .dark .trading-grid {
-        background-image: 
-          linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
-      }
-
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
-
-      @keyframes spin-slow {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-      .animate-spin-slow {
-        animation: spin-slow 20s linear infinite;
-      }
-    </style>
   <script type="importmap">
 {
   "imports": {
@@ -82,8 +76,10 @@
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-[#f8fafc] dark:bg-[#020408] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+  <body class="bg-[#191a1a] text-[#e8e8e6] font-sans antialiased">
+
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

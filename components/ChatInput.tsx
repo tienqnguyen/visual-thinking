@@ -5,21 +5,17 @@
 */
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Loader2, Image as ImageIcon, X, Link as LinkIcon, Globe } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Terminal, Image as ImageIcon, Send, X } from "lucide-react";
 
 interface ChatInputProps {
   onSend: (message: string, image?: string) => void;
   disabled: boolean;
+  language?: "vi" | "en";
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled, language = "vi" }) => {
   const [input, setInput] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isUrlLoading, setIsUrlLoading] = useState(false);
-  const [showUrlInput, setShowUrlInput] = useState(false);
-  const [urlValue, setUrlValue] = useState("");
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -30,7 +26,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
       onSend(input.trim(), selectedImage);
       setInput("");
       setSelectedImage(null);
-      setErrorMessage(null);
       if (textareaRef.current) textareaRef.current.style.height = "auto";
     }
   };
@@ -39,31 +34,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
-    }
-  };
-
-  const handleUrlSubmit = async () => {
-    if (!urlValue.trim()) return;
-    setIsUrlLoading(true);
-    setErrorMessage(null);
-    try {
-      const response = await fetch(urlValue.trim(), { mode: 'cors' });
-      if (response.ok) {
-        const blob = await response.blob();
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          setSelectedImage(event.target?.result as string);
-          setIsUrlLoading(false);
-          setShowUrlInput(false);
-          setUrlValue("");
-        };
-        reader.readAsDataURL(blob);
-      } else {
-        throw new Error("CORS_BLOCK");
-      }
-    } catch (err) {
-      setErrorMessage("Không thể tải ảnh từ URL này do bảo mật (CORS). Hãy chụp màn hình và dán (Ctrl+V) thay thế.");
-      setIsUrlLoading(false);
     }
   };
 
@@ -99,115 +69,57 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
   }, [input]);
 
   return (
-    <div className="relative flex flex-col gap-3">
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute bottom-full mb-4 left-0">
-            <div className="relative p-1 bg-white dark:bg-[#0f172a] rounded-2xl border-2 border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)] overflow-hidden">
-              <img src={selectedImage} alt="Preview" className="h-40 w-auto rounded-xl object-contain bg-black" />
-              <button onClick={() => setSelectedImage(null)} className="absolute top-2 right-2 p-1.5 bg-black/70 text-white rounded-full hover:bg-rose-600 transition-colors shadow-xl">
-                <X size={14} />
-              </button>
-              <div className="absolute bottom-0 inset-x-0 bg-emerald-500/80 text-white text-[8px] font-black uppercase text-center py-1 tracking-widest">
-                Dữ liệu đã sẵn sàng
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="flex flex-col gap-2 relative">
+      {selectedImage && (
+        <div className="relative border border-[#383a3b] p-2 inline-block w-max max-w-full bg-[#222425] shadow-sm rounded-lg mb-2">
+           <img src={selectedImage} alt="Preview" className="h-32 w-auto object-contain rounded" />
+           <button onClick={() => setSelectedImage(null)} className="absolute -top-2 -right-2 bg-[#383a3b] text-white hover:bg-red-500 hover:text-white p-1 rounded-full border border-neutral-700 transition-colors shadow-sm">
+             <X size={14} />
+           </button>
+        </div>
+      )}
 
-      <div className="flex flex-col bg-white dark:bg-[#0a0f18] rounded-2xl border border-slate-200 dark:border-white/10 shadow-2xl transition-all duration-500 focus-within:border-emerald-500/50">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 border border-[#383a3b] rounded-2xl p-3 bg-[#222425] shadow-sm transition-all focus-within:ring-1 focus-within:ring-[#2383E2]/50 focus-within:border-[#2383E2]/50">
+        <input type="file" ref={fileInputRef} onChange={handleFileSelect} accept="image/*" className="hidden" />
         
-        {/* URL Input Bar */}
-        <AnimatePresence>
-          {showUrlInput && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden border-b border-slate-100 dark:border-white/5">
-              <div className="p-3 flex gap-2">
-                <div className="flex-1 bg-slate-50 dark:bg-black/40 rounded-xl px-3 flex items-center gap-2 border border-slate-200 dark:border-white/5">
-                   <LinkIcon size={14} className="text-slate-400" />
-                   <input 
-                    autoFocus
-                    value={urlValue}
-                    onChange={(e) => setUrlValue(e.target.value)}
-                    placeholder="Dán link hình ảnh (https://...)" 
-                    className="flex-1 bg-transparent border-none outline-none text-xs py-2 text-slate-800 dark:text-slate-100"
-                    onKeyDown={(e) => e.key === 'Enter' && handleUrlSubmit()}
-                   />
-                </div>
-                <button 
-                  onClick={handleUrlSubmit}
-                  disabled={isUrlLoading || !urlValue.trim()}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-colors disabled:opacity-50"
-                >
-                  {isUrlLoading ? <Loader2 size={14} className="animate-spin" /> : "Fetch"}
-                </button>
-                <button onClick={() => setShowUrlInput(false)} className="p-2 text-slate-400 hover:text-rose-500 transition-colors">
-                  <X size={16} />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <form onSubmit={handleSubmit} className="flex items-end gap-1 p-2">
-          <input type="file" ref={fileInputRef} onChange={handleFileSelect} accept="image/*" className="hidden" />
-          
-          <div className="flex gap-1">
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={disabled}
-              className="p-3 text-slate-400 hover:text-emerald-500 transition-all rounded-xl hover:bg-slate-50 dark:hover:bg-white/5"
-              title="Tải ảnh lên"
-            >
-              <ImageIcon size={20} />
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowUrlInput(!showUrlInput)}
-              disabled={disabled}
-              className={`p-3 transition-all rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 ${showUrlInput ? 'text-emerald-500 bg-emerald-500/5' : 'text-slate-400 hover:text-blue-500'}`}
-              title="Nhập URL ảnh"
-            >
-              <Globe size={20} />
-            </button>
-          </div>
-
+        <div className="flex items-start gap-2 flex-1">
           <textarea
             ref={textareaRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
-            placeholder={selectedImage ? "Thêm ghi chú phân tích (tùy chọn)..." : "Vui lòng cung cấp biểu đồ để phân tích..."}
+            placeholder={
+              selectedImage 
+                ? (language === 'vi' ? "Thêm bối cảnh..." : "Add context to your image...") 
+                : (language === 'vi' ? "Đặt câu hỏi, tải biểu đồ lên..." : "Ask a question, paste a chart image, or click to upload...")
+            }
             disabled={disabled}
-            rows={1}
-            className="flex-1 max-h-[120px] min-h-[48px] py-3 px-3 bg-transparent border-none outline-none resize-none text-slate-800 dark:text-slate-100 placeholder-slate-500 disabled:opacity-50 font-medium text-sm md:text-base scrollbar-hide"
+            rows={2}
+            className="flex-1 bg-transparent border-none outline-none resize-none text-[#e8e8e6] placeholder-neutral-500 disabled:opacity-50 text-[15px] py-1.5 px-1 font-sans"
           />
+        </div>
+        
+        <div className="flex justify-between items-center pt-2">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={disabled}
+            className="text-neutral-400 hover:text-white p-2 rounded-lg hover:bg-[#383a3b] transition-colors"
+          >
+            <ImageIcon size={18} />
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             type="submit"
             disabled={!selectedImage || disabled}
-            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
-              !selectedImage || disabled
-                ? "bg-slate-100 dark:bg-slate-800 text-slate-400"
-                : "bg-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:bg-emerald-700"
-            }`}
+            className={`flex items-center gap-2 font-medium justify-center px-4 py-1.5 rounded-full transition-all ${(!selectedImage && !input.trim()) || disabled ? "bg-[#383a3b] text-neutral-500" : "bg-[#e8e8e6] text-[#191a1a] hover:bg-white"}`}
           >
-            {disabled ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
-          </motion.button>
-        </form>
-      </div>
-
-      <AnimatePresence>
-        {errorMessage && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-[9px] text-rose-500 font-black uppercase tracking-widest text-center">
-            {errorMessage}
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <span className="text-sm">{language === 'vi' ? 'Gửi' : 'Submit'}</span>
+            <Send size={14} className="opacity-80" />
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
